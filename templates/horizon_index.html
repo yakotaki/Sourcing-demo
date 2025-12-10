@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="{{ 'zh-CN' if lang == 'zh' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% if lang == 'zh' %}
+            Horizon Sourcing | 从中国工厂到您仓库的一站式采购控制中心
+        {% else %}
+            Horizon Sourcing | Futuristic Sourcing Control Center from China
+        {% endif %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Fonts & Icons (same style as main site) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --bg-panel: rgba(15, 23, 42, 0.9);
+            --accent: #38bdf8;
+            --accent-soft: rgba(56, 189, 248, 0.2);
+            --accent-warm: #f59e0b;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+            color: var(--text-main);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .page-wrap {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HERO */
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.35) saturate(1.3);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(56,189,248,0.25), transparent 55%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4.5rem;
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .3rem .8rem;
+            border-radius: 999px;
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.7);
+            color: var(--accent);
+        }
+
+        .hero-title {
+            font-size: clamp(2.4rem, 4vw, 3.4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 1rem 0 .75rem;
+        }
+
+        .hero-title span.highlight {
+            background-image: linear-gradient(120deg, #38bdf8, #a855f7);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero-lead {
+            font-size: .98rem;
+            color: var(--text-muted);
+            max-width: 36rem;
+        }
+
+        .hero-cta-row {
+            margin-top: 1.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .9rem;
+        }
+
+        .btn-primary {
+            padding: .8rem 1.6rem;
+            border-radius: 999px;
+            border: none;
+            font-weight: 600;
+            font-size: .9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: #0b1120;
+            cursor: pointer;
+            box-shadow: 0 18px 40px rgba(56,189,248,0.4);
+        }
+
+        .btn-ghost {
+            padding: .8rem 1.3rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.7);
+            background: rgba(15,23,42,0.8);
+            color: var(--text-main);
+            font-size: .9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            cursor: pointer;
+        }
+
+        .hero-right-panel {
+            background: linear-gradient(145deg, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+            border-radius: 1.25rem;
+            border: 1px solid rgba(148,163,184,0.5);
+            padding: 1.2rem 1.3rem;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 18px 45px rgba(15,23,42,0.9);
+        }
+
+        .hero-right-title {
+            font-size: .9rem;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: var(--text-muted);
+            margin-bottom: .7rem;
+        }
+
+        .hero-metric-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-metric {
+            flex: 1;
+            padding: .6rem .8rem;
+            border-radius: .75rem;
+            background: radial-gradient(circle at top left, rgba(56,189,248,0.25), rgba(15,23,42,0.9));
+            border: 1px solid rgba(56,189,248,0.5);
+        }
+
+        .hero-metric-label {
+            font-size: .65rem;
+            text-transform: uppercase;
+            letter-spacing: .16em;
+            color: var(--text-muted);
+        }
+
+        .hero-metric-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-top: .2rem;
+        }
+
+        .hero-metric-desc {
+            font-size: .72rem;
+            color: var(--text-muted);
+        }
+
+        .hero-mini-video {
+            position: relative;
+            margin-top: .8rem;
+            border-radius: .9rem;
+            overflow: hidden;
+            border: 1px solid rgba(148,163,184,0.6);
+        }
+
+        .hero-mini-video video {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            filter: saturate(1.2);
+        }
+
+        .hero-mini-video-label {
+            position: absolute;
+            left: .7rem;
+            bottom: .5rem;
+            font-size: .7rem;
+            padding: .2rem .6rem;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.8);
+        }
+
+        /* SECTIONS */
+
+        main {
+            position: relative;
+            z-index: 2;
+            padding: 0 1.5rem 3.5rem;
+        }
+
+        .section {
+            max-width: 1120px;
+            margin: 0 auto 3rem;
+        }
+
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label {
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .18em;
+            color: var(--accent);
+            margin-bottom: .4rem;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .section-sub {
+            margin-top: .4rem;
+            font-size: .88rem;
+            color: var(--text-muted);
+            max-width: 32rem;
+        }
+
+        /* Mission Strip */
+        .mission-strip {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: .9rem;
+        }
+
+        .pill-card {
+            background: radial-gradient(circle at top left, rgba(56,189,248,0.16), rgba(15,23,42,0.95));
+            border-radius: .9rem;
+            padding: .9rem;
+            border: 1px solid rgba(148,163,184,0.5);
+            font-size: .8rem;
+        }
+
+        .pill-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: .35rem;
+        }
+
+        .pill-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(56,189,248,0.5);
+            color: var(--accent);
+        }
+
+        .pill-tag {
+            font-size: .6rem;
+            text-transform: uppercase;
+            letter-spacing: .16em;
+            color: var(--text-muted);
+        }
+
+        .pill-title {
+            font-weight: 600;
+            margin-bottom: .15rem;
+        }
+
+        .pill-desc {
+            font-size: .78rem;
+            color: var(--text-muted);
+        }
+
+        /* Timeline */
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+            gap: 2rem;
+        }
+
+        .timeline-line {
+            border-radius: 1rem;
+            padding: 1.1rem 1.3rem;
+            background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.6));
+            border: 1px solid rgba(148,163,184,0.5);
+        }
+
+        .timeline-step {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: .9rem;
+            align-items: flex-start;
+            position: relative;
+            padding-bottom: .9rem;
+        }
+
+        .timeline-step:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            left: 15px;
+            top: 34px;
+            bottom: -4px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            opacity: .6;
+        }
+
+        .timeline-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .7rem;
+            background: radial-gradient(circle at center, var(--accent-soft), rgba(15,23,42,1));
+        }
+
+        .timeline-title {
+            font-size: .9rem;
+            font-weight: 600;
+        }
+
+        .timeline-text {
+            font-size: .8rem;
+            color: var(--text-muted);
+        }
+
+        /* Control Room videos */
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .control-tile {
+            position: relative;
+            border-radius: .9rem;
+            overflow: hidden;
+            border: 1px solid rgba(148,163,184,0.5);
+            background: #020617;
+        }
+
+        .control-tile video,
+        .control-tile img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .control-label {
+            position: absolute;
+            left: .6rem;
+            bottom: .5rem;
+            padding: .25rem .6rem;
+            border-radius: 999px;
+            font-size: .65rem;
+            background: rgba(15,23,42,0.9);
+        }
+
+        /* QC Gallery */
+
+        .qc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: .7rem;
+        }
+
+        .qc-item {
+            position: relative;
+            border-radius: .6rem;
+            overflow: hidden;
+            border: 1px solid rgba(148,163,184,0.4);
+        }
+
+        .qc-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            filter: saturate(1.1);
+        }
+
+        .qc-tag {
+            position: absolute;
+            top: .4rem;
+            left: .4rem;
+            font-size: .6rem;
+            background: rgba(15,23,42,0.9);
+            padding: .15rem .5rem;
+            border-radius: 999px;
+        }
+
+        /* Contact */
+
+        .contact-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+            gap: 1.5rem;
+            background: linear-gradient(120deg, rgba(15,23,42,0.96), rgba(15,23,42,0.8));
+            border-radius: 1.2rem;
+            border: 1px solid rgba(148,163,184,0.6);
+            padding: 1.6rem 1.8rem;
+        }
+
+        .contact-form label {
+            display: block;
+            font-size: .75rem;
+            color: var(--text-muted);
+            margin-bottom: .2rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            border-radius: .6rem;
+            border: 1px solid rgba(55,65,81,0.9);
+            padding: .55rem .7rem;
+            background: rgba(15,23,42,0.9);
+            color: var(--text-main);
+            font-size: .8rem;
+            outline: none;
+        }
+
+        .contact-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .small-note {
+            font-size: .72rem;
+            color: var(--text-muted);
+        }
+
+        .contact-video {
+            border-radius: .9rem;
+            overflow: hidden;
+            border: 1px solid rgba(148,163,184,0.6);
+        }
+
+        .contact-video video,
+        .contact-video img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        footer {
+            padding: 1.5rem 1.5rem 2rem;
+            font-size: .75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 900px) {
+            .hero-content {
+                grid-template-columns: minmax(0, 1fr);
+                padding-top: 4.5rem;
+            }
+
+            .hero-right-panel {
+                margin-top: 1rem;
+            }
+
+            .mission-strip {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .timeline-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .control-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .qc-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .contact-panel {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .mission-strip {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .control-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .qc-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+        <!-- MAIN BACKGROUND VIDEO: you will replace src -->
+        <video autoplay muted loop playsinline>
+            <source src="{{ url_for('static', filename='video/horizon_hall.mp4') }}" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <div>
+                <div class="badge-pill">
+                    <i class="fa-solid fa-globe me-1"></i>
+                    {% if lang == 'zh' %}中国采购 · 全球出货{% else %}China Sourcing · Global Delivery{% endif %}
+                </div>
+
+                <h1 class="hero-title">
+                    {% if lang == 'zh' %}
+                        从工厂车间到您仓库的
+                        <span class="highlight">一屏可视化控制</span>
+                    {% else %}
+                        One Screen to See Your
+                        <span class="highlight">Entire China Supply Chain</span>
+                    {% endif %}
+                </h1>
+
+                <p class="hero-lead">
+                    {% if lang == 'zh' %}
+                        Horizon Sourcing 通过标准化流程、现场质检与可视化追踪，帮助海外进口商在中国快速、安全地完成选品、下单、验货与出运。
+                    {% else %}
+                        Horizon Sourcing turns your China purchasing into a clear, trackable process – from factory visit
+                        and samples to on-site QC and container loading, with video proof at every key step.
+                    {% endif %}
+                </p>
+
+                <div class="hero-cta-row">
+                    <a href="#contact" class="btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        {% if lang == 'zh' %}获取采购方案{% else %}Get a Sourcing Plan{% endif %}
+                    </a>
+                    <a href="#control" class="btn-ghost">
+                        <i class="fa-solid fa-play"></i>
+                        {% if lang == 'zh' %}观看流程短片{% else %}Watch Process Reels{% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-right-panel">
+                <div class="hero-right-title">
+                    {% if lang == 'zh' %}实时协同控制台{% else %}Live Sourcing Dashboard{% endif %}
+                </div>
+                <div class="hero-metric-row">
+                    <div class="hero-metric">
+                        <div class="hero-metric-label">
+                            {% if lang == 'zh' %}项目可见度{% else %}Order visibility{% endif %}
+                        </div>
+                        <div class="hero-metric-value">360°</div>
+                        <div class="hero-metric-desc">
+                            {% if lang == 'zh' %}从打样到装柜，每一步有图有视频。{% else %}Photo & video checkpoints from sample to loading.{% endif %}
+                        </div>
+                    </div>
+                    <div class="hero-metric">
+                        <div class="hero-metric-label">
+                            {% if lang == 'zh' %}质检覆盖{% else %}QC coverage{% endif %}
+                        </div>
+                        <div class="hero-metric-value">100%</div>
+                        <div class="hero-metric-desc">
+                            {% if lang == 'zh' %}关键批次全检，问题可追溯。{% else %}Key batches fully checked and traceable.{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-mini-video">
+                    <!-- MINI LOOP: e.g. factory walk-through or dashboard animation -->
+                    <video autoplay muted loop playsinline>
+                        <source src="{{ url_for('static', filename='video/horizon_mini_loop.mp4') }}" type="video/mp4">
+                    </video>
+                    <div class="hero-mini-video-label">
+                        <i class="fa-solid fa-circle-play me-1"></i>
+                        {% if lang == 'zh' %}样品到出运的关键节点{% else %}Key milestones from sample to shipment{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+
+        <!-- MISSION STRIP -->
+        <section class="section">
+            <div class="mission-strip">
+                <div class="pill-card">
+                    <div class="pill-top">
+                        <div class="pill-icon"><i class="fa-solid fa-factory"></i></div>
+                        <span class="pill-tag">{% if lang == 'zh' %}选品{% else %}Sourcing{% endif %}</span>
+                    </div>
+                    <div class="pill-title">
+                        {% if lang == 'zh' %}多城市工厂网络{% else %}Factory network in multiple hubs{% endif %}
+                    </div>
+                    <div class="pill-desc">
+                        {% if lang == 'zh' %}
+                            宁波、杭州、上海周边核心工厂实地筛选，避免“PPT 工厂”。
+                        {% else %}
+                            On-the-ground vetting around Ningbo, Hangzhou, Shanghai – no “PowerPoint factories”.
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="pill-card">
+                    <div class="pill-top">
+                        <div class="pill-icon"><i class="fa-solid fa-microscope"></i></div>
+                        <span class="pill-tag">QC</span>
+                    </div>
+                    <div class="pill-title">
+                        {% if lang == 'zh' %}质检视频证据{% else %}QC with visual proof{% endif %}
+                    </div>
+                    <div class="pill-desc">
+                        {% if lang == 'zh' %}
+                            关键尺寸、包装与装柜全程拍照/录像，质检报告一目了然。
+                        {% else %}
+                            Critical dimensions, packing, and loading recorded in photos & clips, plus clean reports.
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="pill-card">
+                    <div class="pill-top">
+                        <div class="pill-icon"><i class="fa-solid fa-ship"></i></div>
+                        <span class="pill-tag">
+                            {% if lang == 'zh' %}物流{% else %}Logistics{% endif %}
+                        </span>
+                    </div>
+                    <div class="pill-title">
+                        {% if lang == 'zh' %}从 EXW 到 DDP{% else %}From EXW to DDP{% endif %}
+                    </div>
+                    <div class="pill-desc">
+                        {% if lang == 'zh' %}
+                            与多家货代及卡车公司合作，可根据预算和时效推荐方案。
+                        {% else %}
+                            Multiple forwarders & trucking partners to match your budget and lead-time targets.
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="pill-card">
+                    <div class="pill-top">
+                        <div class="pill-icon"><i class="fa-solid fa-language"></i></div>
+                        <span class="pill-tag">
+                            {% if lang == 'zh' %}沟通{% else %}Comms{% endif %}
+                        </span>
+                    </div>
+                    <div class="pill-title">
+                        {% if lang == 'zh' %}双语项目经理{% else %}Bilingual PMs{% endif %}
+                    </div>
+                    <div class="pill-desc">
+                        {% if lang == 'zh' %}
+                            用英文和中文与您及工厂分别沟通，减少理解偏差和遗漏。
+                        {% else %}
+                            Clear English with you, precise Chinese with the factory, so nothing gets lost.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE: FROM IDEA TO CONTAINER -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">
+                    {% if lang == 'zh' %}从想法到装柜{% else %}From Idea to Container{% endif %}
+                </div>
+                <h2 class="section-title">
+                    {% if lang == 'zh' %}
+                        一条可视化时间线，让每个节点都看得见
+                    {% else %}
+                        A visual timeline so every milestone is visible
+                    {% endif %}
+                </h2>
+                <p class="section-sub">
+                    {% if lang == 'zh' %}
+                        每个阶段都有照片/短视频、清单和遇到的问题。您不在中国，也能像在现场一样了解项目状态。
+                    {% else %}
+                        Every phase has photos, short clips, and notes – so even if you are not in China, you see what we see.
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="timeline-grid">
+                <div class="timeline-line">
+                    <div class="timeline-step">
+                        <div class="timeline-badge">1</div>
+                        <div>
+                            <div class="timeline-title">
+                                {% if lang == 'zh' %}需求分析 & 工厂筛选{% else %}Brief & factory shortlist{% endif %}
+                            </div>
+                            <div class="timeline-text">
+                                {% if lang == 'zh' %}
+                                    根据目标市场、认证要求和预算，筛选出 3–5 家工厂，并说明各自优劣。
+                                {% else %}
+                                    Based on your market, certifications, and budget, we shortlist 3–5 factories and explain pros & cons.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-badge">2</div>
+                        <div>
+                            <div class="timeline-title">
+                                {% if lang == 'zh' %}样品与打样报告{% else %}Samples & pilot run{% endif %}
+                            </div>
+                            <div class="timeline-text">
+                                {% if lang == 'zh' %}
+                                    对比样品和标准，出具照片和简短视频，对关键细节给出评价建议。
+                                {% else %}
+                                    We compare samples to your standard, record close-up clips, and comment on key details.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-badge">3</div>
+                        <div>
+                            <div class="timeline-title">
+                                {% if lang == 'zh' %}量产质检{% else %}Mass production QC{% endif %}
+                            </div>
+                            <div class="timeline-text">
+                                {% if lang == 'zh' %}
+                                    随机抽检、尺寸/功能测试、包装检查，全部有现场照片支持。
+                                {% else %}
+                                    Random checks, dimension & functional tests, packaging checks – all backed by photos.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-badge">4</div>
+                        <div>
+                            <div class="timeline-title">
+                                {% if lang == 'zh' %}装柜与出运文件{% else %}Loading & shipping docs{% endif %}
+                            </div>
+                            <div class="timeline-text">
+                                {% if lang == 'zh' %}
+                                    记录装柜过程，确认箱号、封条号及关键文件，确保货物安全上路。
+                                {% else %}
+                                    We document loading, seal number, and key documents so the shipment leaves China safely.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTROL ROOM VIDEOS -->
+                <div id="control">
+                    <div class="section-label">
+                        {% if lang == 'zh' %}控制室画面{% else %}Control room view{% endif %}
+                    </div>
+                    <p class="section-sub">
+                        {% if lang == 'zh' %}
+                            您可以为每个阶段录制 10–30 秒短视频，例如选样、生产线巡查、装柜现场等，这些视频会作为背景或缩略图展示。
+                        {% else %}
+                            Here you can drop 10–30s clips from factory floor, QC, and loading – each tile is one “window” into China.
+                        {% endif %}
+                    </p>
+
+                    <div class="control-grid">
+                        <div class="control-tile">
+                            <video autoplay muted loop playsinline>
+                                <source src="{{ url_for('static', filename='video/hs_factory_walk.mp4') }}" type="video/mp4">
+                            </video>
+                            <div class="control-label">
+                                {% if lang == 'zh' %}工厂巡查{% else %}Factory walk-through{% endif %}
+                            </div>
+                        </div>
+                        <div class="control-tile">
+                            <video autoplay muted loop playsinline>
+                                <source src="{{ url_for('static', filename='video/hs_qc_table.mp4') }}" type="video/mp4">
+                            </video>
+                            <div class="control-label">
+                                {% if lang == 'zh' %}质检台{% else %}QC bench{% endif %}
+                            </div>
+                        </div>
+                        <div class="control-tile">
+                            <video autoplay muted loop playsinline>
+                                <source src="{{ url_for('static', filename='video/hs_loading_bay.mp4') }}" type="video/mp4">
+                            </video>
+                            <div class="control-label">
+                                {% if lang == 'zh' %}装柜现场{% else %}Loading bay{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QC GALLERY -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">
+                    QC
+                </div>
+                <h2 class="section-title">
+                    {% if lang == 'zh' %}
+                        一堵“质检墙”：一眼看出我们关注什么
+                    {% else %}
+                        A QC wall that shows what we really look at
+                    {% endif %}
+                </h2>
+                <p class="section-sub">
+                    {% if lang == 'zh' %}
+                        将您拍摄的质检照片分区展示：尺寸、表面、包装、装柜，让买家一眼看出专业度。
+                    {% else %}
+                        Use your real QC photos – dimensions, finish, packaging, loading – grouped visually by what matters.
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="qc-grid">
+                <!-- Replace these src files with your own images -->
+                <div class="qc-item">
+                    <img src="{{ url_for('static', filename='img/hs_qc_dimensions.png') }}" alt="">
+                    <div class="qc-tag">
+                        {% if lang == 'zh' %}尺寸{% else %}Dimensions{% endif %}
+                    </div>
+                </div>
+                <div class="qc-item">
+                    <img src="{{ url_for('static', filename='img/hs_qc_surface.png') }}" alt="">
+                    <div class="qc-tag">
+                        {% if lang == 'zh' %}表面{% else %}Finish{% endif %}
+                    </div>
+                </div>
+                <div class="qc-item">
+                    <img src="{{ url_for('static', filename='img/hs_qc_packing.png') }}" alt="">
+                    <div class="qc-tag">
+                        {% if lang == 'zh' %}包装{% else %}Packing{% endif %}
+                    </div>
+                </div>
+                <div class="qc-item">
+                    <img src="{{ url_for('static', filename='img/hs_qc_loading.png') }}" alt="">
+                    <div class="qc-tag">
+                        {% if lang == 'zh' %}装柜{% else %}Loading{% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section class="section" id="contact">
+            <div class="section-header">
+                <div class="section-label">
+                    {% if lang == 'zh' %}开始一个项目{% else %}Start a project{% endif %}
+                </div>
+                <h2 class="section-title">
+                    {% if lang == 'zh' %}
+                        用 3 条信息，为您设计一条采购路径
+                    {% else %}
+                        With 3 quick inputs, we can sketch your sourcing path
+                    {% endif %}
+                </h2>
+            </div>
+
+            <div class="contact-panel">
+                <div>
+                    <form class="contact-form">
+                        <div style="display:flex; gap:.8rem; margin-bottom:.8rem;">
+                            <div style="flex:1;">
+                                <label>
+                                    {% if lang == 'zh' %}公司所在国家{% else %}Your country{% endif %}
+                                </label>
+                                <input type="text" placeholder="{% if lang == 'zh' %}例如：德国 / 美国{% else %}e.g. Germany / USA{% endif %}">
+                            </div>
+                            <div style="flex:1;">
+                                <label>
+                                    {% if lang == 'zh' %}主要产品方向{% else %}Product focus{% endif %}
+                                </label>
+                                <input type="text" placeholder="{% if lang == 'zh' %}例如：五金工具 / 家居 / 灯具{% else %}e.g. tools / home / lighting{% endif %}">
+                            </div>
+                        </div>
+                        <div style="margin-bottom:.8rem;">
+                            <label>
+                                {% if lang == 'zh' %}目标年采购额 (USD){% else %}Target annual volume (USD){% endif %}
+                            </label>
+                            <input type="text" placeholder="USD 200,000 – 1,000,000">
+                        </div>
+                        <div style="margin-bottom:.9rem;">
+                            <label>
+                                {% if lang == 'zh' %}补充说明{% else %}Notes{% endif %}
+                            </label>
+                            <textarea placeholder="{% if lang == 'zh' %}请简单描述您现在的采购痛点，例如质量不稳定、沟通效率低、供应商分散等。{% else %}Briefly describe your current pain points (quality, communication, too many suppliers, etc.).{% endif %}"></textarea>
+                        </div>
+                        <button type="button" class="btn-primary">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            {% if lang == 'zh' %}发送给 Horizon 团队{% else %}Send to Horizon team (demo){% endif %}
+                        </button>
+                        <p class="small-note" style="margin-top:.5rem;">
+                            {% if lang == 'zh' %}
+                                * 本页面为演示网站，不会真正发送信息。真实项目中可以接入邮箱、CRM 或 WhatsApp。
+                            {% else %}
+                                * This is a demo page – the form does not send data. In real projects, you can connect it to email, CRM or WhatsApp.
+                            {% endif %}
+                        </p>
+                    </form>
+                </div>
+
+                <div>
+                    <div class="contact-video">
+                        <!-- Another short loop or static poster -->
+                        <video autoplay muted loop playsinline>
+                            <source src="{{ url_for('static', filename='video/hs_control_room.mp4') }}" type="video/mp4">
+                        </video>
+                    </div>
+                    <p class="small-note" style="margin-top:.6rem;">
+                        {% if lang == 'zh' %}
+                            视频建议：将您实际走进工厂、拍照、记录问题的画面剪在 15–30 秒内，作为“控制室”的背景。
+                        {% else %}
+                            Suggested clip: a 15–30s sequence of you in the factory, taking photos, recording issues – used as the “control room” backdrop.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        {% if lang == 'zh' %}
+            本网站为 Horizon Sourcing 演示页面，展示我们为外贸采购服务打造的未来感网站风格。
+        {% else %}
+            This site is a demo for Horizon Sourcing, showing how we design futuristic sourcing service websites.
+        {% endif %}
+    </footer>
+</div>
+</body>
+</html>

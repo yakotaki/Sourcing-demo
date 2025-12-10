@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.site_title }}{% endblock %}
+
+{% block content %}
+{% if not search_query and not active_category %}
+<div class="p-5 mb-5 bg-white rounded-4 shadow-sm text-center position-relative overflow-hidden"
+     style="background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%); color: white;">
+    <div class="position-relative z-1 py-4">
+        <h1 class="display-5 fw-bold mb-3">{{ t.hero_title }}</h1>
+        <p class="lead mb-4 opacity-75">{{ t.hero_subtitle }}</p>
+        <a href="#shop-grid" class="btn btn-light btn-lg rounded-pill fw-semibold px-5 shadow">
+            {{ t.hero_cta }}
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4" id="shop-grid">
+    <div class="col-lg-3">
+        <div class="card shadow-sm border-0 sticky-top" style="top: 90px; z-index: 1;">
+            <div class="card-body">
+                <h5 class="card-title fw-bold mb-3">{{ t.sidebar_categories }}</h5>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('index') }}"
+                       class="list-group-item list-group-item-action border-0 px-0 {% if not active_category %}fw-bold text-primary{% endif %}">
+                        {{ t.sidebar_all_products }}
+                    </a>
+                    {% for cat in categories %}
+                    <a href="{{ url_for('index', category=cat) }}"
+                       class="list-group-item list-group-item-action border-0 px-0 {% if active_category == cat %}fw-bold text-primary{% endif %}">
+                        {{ t["cat_" ~ cat] }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 mb-0">
+                {% if search_query %}
+                    {{ t.list_search_results_prefix }} "{{ search_query }}"
+                {% elif active_category %}
+                    {{ t["cat_" ~ active_category] }}
+                {% else %}
+                    {{ t.list_featured }}
+                {% endif %}
+            </h2>
+            <span class="text-muted small">{{ products|length }} {{ t.list_items_label }}</span>
+        </div>
+
+        {% if products|length == 0 %}
+            <div class="text-center py-5">
+                <i class="fa-regular fa-folder-open fs-1 text-muted mb-3"></i>
+                <p class="text-muted">{{ t.list_no_products }}</p>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary">{{ t.list_clear_filters }}</a>
+            </div>
+        {% else %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for product in products %}
+                <div class="col">
+                    <div class="card h-100">
+                        {% if product.badge %}
+                        <span class="position-absolute top-0 start-0 m-3 badge bg-dark shadow-sm">
+                            {{ product.badge }}
+                        </span>
+                        {% endif %}
+
+                        <img src="{{ url_for('static', filename='img/' ~ product.image) }}"
+                             onerror="this.src='https://placehold.co/400x300?text={{ product.name | replace(' ', '+') }}'"
+                             class="card-img-top bg-light"
+                             alt="{{ product.name if lang == 'en' else product.name_zh }}"
+                             style="height: 220px; object-fit: cover;">
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2 text-muted small text-uppercase fw-bold">
+                                {{ t["cat_" ~ product.category] }}
+                            </div>
+                            <h5 class="card-title text-truncate">
+                                {{ product.name if lang == 'en' else product.name_zh }}
+                            </h5>
+                            <p class="card-text small text-muted flex-grow-1">
+                                {{ product.short if lang == 'en' else product.short_zh }}
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-end mt-3">
+                                <span class="fs-5 fw-bold text-dark">
+                                    {{ product.price }} <span class="fs-6 fw-normal">{{ product.currency }}</span>
+                                </span>
+
+                                <form action="{{ url_for('add_to_cart', pid=product.id) }}" method="post">
+                                    <input type="hidden" name="qty" value="1">
+                                    <button type="submit"
+                                            class="btn btn-primary btn-sm rounded-circle p-2"
+                                            title="{{ t.cart_checkout_btn }}">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <a href="{{ url_for('product_detail', slug=product.slug) }}" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="{{ 'zh' if lang == 'zh' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ t.site_title }}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #111827;
+            --accent-color: #f3f4f6;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            padding: 0.75rem 0;
+        }
+        .navbar-brand span {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            letter-spacing: -0.025em;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: #4b5563 !important;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+        .badge-cart {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            background: white;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.5rem 1.2rem;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        .site-footer {
+            margin-top: auto;
+            background: white;
+            padding: 2rem 0;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+            <i class="fa-solid fa-cloud-bolt text-primary"></i>
+            <span>{{ t.brand_name }}</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+            <form class="d-flex mx-auto my-2 my-lg-0 w-50" action="{{ url_for('index') }}" method="get">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="fa fa-search text-muted"></i>
+                    </span>
+                    <input class="form-control border-start-0 bg-light"
+                           type="search" name="q"
+                           placeholder="{{ t.search_placeholder }}"
+                           aria-label="Search">
+                </div>
+            </form>
+
+            <ul class="navbar-nav ms-auto align-items-center gap-3">
+                <li class="nav-item">
+                    <a class="nav-link position-relative" href="{{ url_for('cart_view') }}">
+                        <i class="fa-solid fa-cart-shopping fs-5"></i>
+                        {% if cart_count %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-cart">
+                            {{ cart_count }}
+                        </span>
+                        {% endif %}
+                    </a>
+                </li>
+
+                {% if current_user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fa-regular fa-user me-1"></i> {{ current_user }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                            <li><a class="dropdown-item" href="{{ url_for('account') }}">{{ t.nav_my_orders }}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">{{ t.nav_logout }}</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-secondary btn-sm rounded-pill px-4"
+                           href="{{ url_for('login') }}">{{ t.nav_login }}</a>
+                    </li>
+                {% endif %}
+
+                <!-- Language dropdown with flags -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-1"
+                       href="#" id="langDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if lang == 'en' %}
+                            <img src="https://flagcdn.com/w20/gb.png" alt="EN"
+                                 style="width:20px;height:auto;border-radius:2px;">
+                            <span>English</span>
+                        {% else %}
+                            <img src="https://flagcdn.com/w20/cn.png" alt="CN"
+                                 style="width:20px;height:auto;border-radius:2px;">
+                            <span>中文</span>
+                        {% endif %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 {% if lang == 'en' %}active{% endif %}"
+                               href="{{ url_for(request.endpoint or 'index',
+                                                lang='en',
+                                                **(request.view_args or {})) }}">
+                                <img src="https://flagcdn.com/w20/gb.png" alt="EN"
+                                     style="width:20px;height:auto;border-radius:2px;">
+                                <span>English</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 {% if lang == 'zh' %}active{% endif %}"
+                               href="{{ url_for(request.endpoint or 'index',
+                                                lang='zh',
+                                                **(request.view_args or {})) }}">
+                                <img src="https://flagcdn.com/w20/cn.png" alt="CN"
+                                     style="width:20px;height:auto;border-radius:2px;">
+                                <span>中文</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="py-5">
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="mb-4">
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm border-0" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+<footer class="site-footer text-center">
+    <div class="container">
+        <p class="mb-1">&copy; 2025 SkyLane Shop Demo.</p>
+        <div class="d-flex justify-content-center gap-3 mt-2">
+            <a href="#" class="text-decoration-none text-muted"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="text-decoration-none text-muted"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" class="text-decoration-none text-muted"><i class="fa-brands fa-github"></i></a>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
