@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-def get_lang():
-    lang = request.args.get("lang", "en").lower()
-    return "zh" if lang in ("zh", "cn", "zh-cn") else "en"
+def get_lang(default="zh"):
+    lang = request.args.get("lang", default)
+    return "zh" if lang and lang.lower() in ("zh", "cn", "zh-cn") else "en"
+
 
 
 @app.route("/")
